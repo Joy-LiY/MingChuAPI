@@ -7,31 +7,31 @@ public class Result<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String code;
-    private String msg;
+    private String resultCode;
+    private String resultMsg;
     private T data;
     private Date time;
 
     public Result() {}
     public Result(CodeEnum codeenum, T data) {
-        this.code = codeenum.getCode();
-        this.msg = codeenum.getMsg();
+        this.resultCode = codeenum.getCode();
+        this.resultMsg = codeenum.getMsg();
         this.data = data;
         this.time = new Date();
     }
 
-    public Result(String code, String msg, T data) {
-        this.code = code;
-        this.msg = msg;
+    public Result(String resultCode, String resultMsg, T data) {
+        this.resultCode = resultCode;
+        this.resultMsg = resultMsg;
         this.data = data;
         this.time = new Date();
     }
 
-    public String getCode() {return code;}
-    public void setCode(String code) {this.code = code;}
+    public String getResultCode() {return resultCode;}
+    public void setResultCode(String resultCode) {this.resultCode = resultCode;}
 
-    public String getMsg() {return msg;}
-    public void setMsg(String msg) {this.msg = msg;}
+    public String getResultMsg() {return resultMsg;}
+    public void setResultMsg(String resultMsg) {this.resultMsg = resultMsg;}
 
     public T getData() {return data;}
     public void setData(T data) {this.data = data;}

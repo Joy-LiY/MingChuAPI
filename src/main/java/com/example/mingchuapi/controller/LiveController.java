@@ -1,5 +1,6 @@
 package com.example.mingchuapi.controller;
 
+import com.example.mingchuapi.model.CodeEnum;
 import com.example.mingchuapi.model.LiveModel;
 import com.example.mingchuapi.model.Result;
 import com.example.mingchuapi.service.LiveService;
@@ -27,7 +28,7 @@ public class LiveController {
 
 
     /**
-     *
+     * 平台获取设备直播地址。
      * @param shop_id 店铺唯一ID （食品经营许可证编码：JY + 14 位阿拉伯数字或CY + 13 位阿拉伯数字）
      * @param device_id 设备 ID
      * @param channel_idx 通道号
@@ -40,9 +41,12 @@ public class LiveController {
     @GetMapping("/live-address")
     public Result getLiveURL(String shop_id, String device_id, String channel_idx, @RequestParam( name = "upload_rate" , defaultValue = "0") Integer upload_rate,
                              @RequestParam( name = "upload_rate" , defaultValue = "0") Integer live_mode, @RequestParam( name = "enable_audio" , defaultValue = "0")Integer enable_audio,
-                             @RequestParam( name = "expire_time" , defaultValue = "24 * 60 * 60") Integer expire_time){
+                             @RequestParam( name = "expire_time" , defaultValue = "24") Integer expire_time){
         Result result = new Result();
         LiveModel liveModel = liveService.getLiveUrl(liveurl,device_id,0);
+        liveModel.setExpires_in(expire_time);
+        result.setData(liveModel);
+        result.setResultCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
         return result;
     }
 }

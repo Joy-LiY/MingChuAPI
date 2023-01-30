@@ -14,8 +14,8 @@ public class LiveModel {
     //B01接口 结果返回模型
     public String url;
 
-    public String expires_in;
+    public Integer expires_in;
     
-    public String heartbeat_time;
+    public Integer heartbeat_time;
 
 }
