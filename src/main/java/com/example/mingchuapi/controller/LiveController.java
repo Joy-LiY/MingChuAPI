@@ -4,11 +4,10 @@ import com.example.mingchuapi.model.LiveModel;
 import com.example.mingchuapi.model.Result;
 import com.example.mingchuapi.service.LiveService;
 import com.example.mingchuapi.util.HttpUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -20,6 +19,7 @@ public class LiveController {
 
     HttpUtils httpUtils;
 
+    @Autowired
     LiveService liveService;
 
     @Value("${url.liveurl}")
@@ -37,10 +37,10 @@ public class LiveController {
      * @param expire_time 过期时长 （单位：秒；默认为 24 * 60 * 60 秒）
      * @return
      */
-    @RequestMapping(value = "/live-address", method = RequestMethod.GET)
-    @ResponseBody
-    public Result getLiveURL(String shop_id, String device_id, String channel_idx, Integer upload_rate,
-                             Integer live_mode, Integer enable_audio, Integer expire_time){
+    @GetMapping("/live-address")
+    public Result getLiveURL(String shop_id, String device_id, String channel_idx, @RequestParam( name = "upload_rate" , defaultValue = "0") Integer upload_rate,
+                             @RequestParam( name = "upload_rate" , defaultValue = "0") Integer live_mode, @RequestParam( name = "enable_audio" , defaultValue = "0")Integer enable_audio,
+                             @RequestParam( name = "expire_time" , defaultValue = "24 * 60 * 60") Integer expire_time){
         Result result = new Result();
         LiveModel liveModel = liveService.getLiveUrl(liveurl,device_id,0);
         return result;

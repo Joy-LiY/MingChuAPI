@@ -13,7 +13,8 @@ spring:
     prefix: classpath:/templates/ # 在构建 URL 时添加到视图名称前的前缀（默认值： classpath:/templates/ ）
     suffix: .html
 
-
+server:
+  port: 8091
 
 url:
   liveurl: https://open.andmu.cn/v3/open/api/websdk/player #接口B01 直播返回地址链接

@@ -8,9 +8,10 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 
+
 public class HttpUtils {
 
-    public String sendPost(String url, String param) {
+    public static String sendPost(String url, String param) {
         OutputStreamWriter out = null;
         BufferedReader in = null;
         StringBuilder result = new StringBuilder("");
