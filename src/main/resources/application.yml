@@ -14,6 +14,8 @@ spring:
     suffix: .html
 
 server:
+  servlet:
+    context-path: /mingchu
   port: 8091
 
 url:
