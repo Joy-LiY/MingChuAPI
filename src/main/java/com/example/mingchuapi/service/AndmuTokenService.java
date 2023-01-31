@@ -1,28 +1,41 @@
 package com.example.mingchuapi.service;
 
+import com.example.mingchuapi.model.AndmuResult;
+import com.example.mingchuapi.util.AndmuUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author taozi
+ */
 @Component
+@Slf4j
 public class AndmuTokenService {
-//	@Autowired
-//	private RedisCache redisCache;
-//
-//	private final int expireTime = 7 * 24 * 60;
-//
-//	public String createToken() {
-//		AndmuResult result = AndmuUtils.getToken();
-//		String token = result.getResult();
-//		if(StringUtils.isNotEmpty(token)) {
-//			redisCache.setCacheObject(Constants.ANDMU_TOKEN_KEY, token, expireTime, TimeUnit.MINUTES);
-//		}
-//		return token;
-//	}
-//
-//	public String getToken() {
-//		String token = redisCache.getCacheObject(Constants.ANDMU_TOKEN_KEY);
-//		if (StringUtils.isEmpty(token)) {
-//			token = createToken();
-//		}
-//		return token;
-//	}
+    // 全局保存token值
+    private static String token = " ";
+
+    /**
+     * 创建Token值
+     *
+     * @return
+     */
+    public void createToken() {
+        AndmuResult andmuResult = AndmuUtils.getToken();
+        token = andmuResult.getResult();
+        log.info("AndmuTokenService创建token：{}", token);
+    }
+
+    /**
+     * 获取token的值
+     *
+     * @return
+     */
+    public String getToken() {
+        if (StringUtils.isBlank(token)) {
+            this.createToken();
+        }
+        log.info("AndmuTokenService返回token：{}", token);
+        return token;
+    }
 }

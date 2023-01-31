@@ -1,13 +1,13 @@
 package com.example.mingchuapi.task;
 
-import com.example.mingchuapi.model.AndmuResult;
-import com.example.mingchuapi.util.AndmuUtils;
+import com.example.mingchuapi.service.AndmuTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 
 /**
  * @Author: zhangwentao
@@ -18,15 +18,15 @@ import javax.annotation.PreDestroy;
 @Component
 @Slf4j
 public class TokenCacheTask {
-    public static String token = " ";
+    @Resource
+    private AndmuTokenService andmuTokenService;
 
 
     @PostConstruct
     public void init() {
-        log.info("=======>系统启动中，开始获取token -----");
-        AndmuResult andmuResult = AndmuUtils.getToken();
-        TokenCacheTask.token = andmuResult.getResult();
-        log.info("=======>系统启动中，token获取完成{}", token);
+        log.info("=======>系统启动中，开始获取token========>");
+        andmuTokenService.createToken();
+        log.info("=======>系统启动中，token获取完成========>");
     }
 
     @PreDestroy

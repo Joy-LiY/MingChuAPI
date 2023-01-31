@@ -20,4 +20,11 @@ url:
   liveurl: https://open.andmu.cn/v3/open/api/websdk/player #接口B01 直播返回地址链接
 
 
+  #B03 平台监测设备健康状态 根据deviceId获取该设备的详细信息。
+  deviceInfoUrl: https://open.andmu.cn/v3/open/api/device/info
+  #B04 指定设备截取图片 根据deviceid获取该设备的实时缩略图
+  realtimeThumbnailUrl: https://open.andmu.cn/v3/open/api/camera/thumbnail/realtime
+
+
+
 
