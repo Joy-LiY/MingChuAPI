@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 
@@ -21,22 +20,24 @@ public class TokenCacheTask {
     @Resource
     private AndmuTokenService andmuTokenService;
 
-
-    @PostConstruct
-    public void init() {
-        log.info("=======>系统启动中，开始获取token========>");
-        andmuTokenService.createToken();
-        log.info("=======>系统启动中，token获取完成========>");
-    }
+    private static final long RATE = 7 * 24 * 60 * 1000L;
 
     @PreDestroy
     public void destroy() {
         //系统运行结束
+        log.info("========>系统关闭中=====================>");
     }
 
-    @Scheduled(cron = "0 0 0/2 * * ?")
-    public void testOne() {
-        //每2小时执行一次缓存
-        init();
+    /**
+     * @description: token的有效期限为7天，这里设置每6天取一次
+     * @author: zhangwentao
+     * @date: 2023/1/31 下午3:07
+     * @param: []
+     * @return: void
+     **/
+    @Scheduled(fixedDelay = RATE)
+    public void tokenScheduled() {
+        log.info("===============>获取token的定时任务已启动获取间隔为:{}ms", RATE);
+        andmuTokenService.createToken();
     }
 }
