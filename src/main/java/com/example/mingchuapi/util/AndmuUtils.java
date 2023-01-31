@@ -25,14 +25,6 @@ public class AndmuUtils {
 
     private static final String TOKEN_URL = "https://open.andmu.cn/v3/open/api/token";
 
-    private static final String DEVICE_LIST_URL = "https://open.andmu.cn/v3/open/api/device/list";
-
-    private static final String WEBSDK_PLAYER_URL = "https://open.andmu.cn/v3/open/api/websdk/player";
-
-    private static final String REALTIME_THUUMBNAIL_URL = "https://open.andmu.cn/v3/open/api/camera/thumbnail/realtime";
-
-    private static final String DEVICE_INFO_URL = "https://open.andmu.cn/v3/open/api/device/info";
-
     private static final String RSA_PRIVATE_KEY = "MIICcwIBADANBgkqhkiG9w0BAQEFAASCAl0wggJZAgEAAoGBANV8eDQvG7rKYf5ww7PTZ4ikgjxFbiu590NLjE9lzfxC2KmAs8Tod93fMgjg8BJIttRKn6/rrMVsSK2FJT7fl/HjXsvKJcy5H9Wm/ZsFB+pI30UU7LzQkrieTmGf5q2TsRtn8gG6qU/Yb8t/ykogehlTz5iaz/LW+QFN4fogz6u5AgMBAAECfzs1SiEu74Hen07x91ToTM6Y0YXlu6hk6y6+xStAEODlqTFZgIIb9yKRxE6yE+L+R7aY+7DOrBwU7BMz2iCV4o2xf2MAW388JznmjjvT+gjYxBJjtt1UjlESLkPvps0Xo6gvAFF3+K1yeDyA4HPAtt7l2+FTylCElTbSadxOuj0CQQD7L1IwVvqVZtTccBrU17L1DzwodG1BJSdysvXEUsetXnkzXIsXFC/YNg/Jl7bJkFSFtDrbreUigd6FCi/d89HrAkEA2ZQk3zzMZeKbo613l/47kdPvH7hLyzUmWK/XmvnNlWkr26zkuCwI26NwFyRQKwuTuXKznEPLsTrOZTpJdtKr6wJASkgrQRpnzojziCEq/iivxqLzwm7z5GENcnEUFzP30wBuTU8f3vpcT89lCdPw/VjOdh/fjBm3+mV3ndZuY2/4cwJAFjeOXE01AeJVyizYXWjUZFujuzVyZ9mRhNTPyz9ewrbuh4vr/vJgJS1XMMXAeeTAvNr9hCNYFUzP7n45Kizw6QJAZK0JZ7uIj+MGHegyM7yQsn+f/RIGbZO1J0w9D+zn2B2sjwE9MdDfAAG3WrGi2m18Bj/nyppv86zkaa8hiZ8m0Q==";
 
     private static final String APP_ID = "6e944bad09b248798cff78504b3b609c";

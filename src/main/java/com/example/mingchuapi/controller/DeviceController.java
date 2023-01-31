@@ -22,14 +22,33 @@ public class DeviceController {
     /**
      * 平台监测设备健康状态。
      *
-     * @param shop_id   店铺唯一 ID
-     * @param device_id 设备 ID 必填
+     * @param shopId   店铺唯一 ID
+     * @param deviceId 设备 ID 必填
      * @return Result
      * 设备在线状态
      * 1：在线；2：离线
      */
     @GetMapping(value = "/device-status")
-    public Result getDeviceStatus(@RequestParam(name = "shop_id", required = false) String shop_id, @RequestParam(name = "device_id") String device_id) {
-        return deviceService.getDeviceStatus(shop_id, device_id);
+    public Result getDeviceStatus(@RequestParam(name = "shop_id", required = false) String shopId,
+                                  @RequestParam(name = "device_id") String deviceId) {
+        return deviceService.getDeviceStatus(shopId, deviceId);
+    }
+
+
+    /**
+     * @param channelIdx 通道号
+     * @param deviceId   设备 ID
+     * @param shopId     店铺唯一 ID
+     * @description: 截取指定设备图片
+     * @author: zhangwentao
+     * @date: 2023/1/31 下午1:48
+     * @param: [shopId, deviceId, channelIdx]
+     * @return: com.example.mingchuapi.model.Result
+     **/
+    @GetMapping(value = "/device-screenshot")
+    public Result getScreenshot(@RequestParam(name = "shop_id", required = false) String shopId,
+                                @RequestParam(name = "device_id") String deviceId,
+                                @RequestParam(name = "channel_idx", required = false) String channelIdx) {
+        return deviceService.getScreenshot(shopId, deviceId, channelIdx);
     }
 }
