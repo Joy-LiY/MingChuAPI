@@ -103,8 +103,8 @@ public class DeviceService {
 
 	private Result getRealtimeThumbnail(Result result, String deviceId) {
 		if (StringUtils.isBlank(deviceId)) {
-			result.setCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-			result.setMsg("缺失参数：device_id");
+			result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			result.setResultMsg("缺失参数：device_id");
 			return result;
 		}
 
@@ -120,18 +120,18 @@ public class DeviceService {
 		// 处理请求结果
 		JSONObject resultJson = JSONObject.parseObject(rsp);
 		if (resultJson == null) {
-			result.setCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-			result.setMsg("远程请求异常！");
+			result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			result.setResultMsg("远程请求异常！");
 		} else {
 			String resultCode = resultJson.getString("resultCode");
-			result.setCode(resultCode);
+			result.setResultCode(resultCode);
 			if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
 				HashMap<String, String> map = new HashMap<>();
 				map.put("url", resultJson.getJSONObject("data").getString("url"));
 				result.setData(map);
 			} else {
-				result.setCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-				result.setMsg(resultJson.getString("resultMsg"));
+				result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+				result.setResultMsg(resultJson.getString("resultMsg"));
 			}
 		}
 		return result;

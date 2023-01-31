@@ -98,9 +98,8 @@ public class LiveService {
                 result.setResultCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
                 result.setResultMsg(CodeEnum.RESULT_CODE_SUCCESS.getMsg());
 
-                LiveModel data = (LiveModel) resultJson.get("data");
                 HashMap<String, String> map = new HashMap<>();
-                map.put("url", data.getUrl());
+                map.put("url", resultJson.getJSONObject("data").getString("url"));
 
                 result.setData(map);
             } else {
