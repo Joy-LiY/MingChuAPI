@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 
 /**
  * 直播相关接口
@@ -23,8 +25,7 @@ public class LiveController {
     @Autowired
     LiveService liveService;
 
-    @Value("${url.liveurl}")
-    private String liveurl;
+
 
 
     /**
@@ -42,11 +43,16 @@ public class LiveController {
     public Result getLiveURL(String shop_id, String device_id, String channel_idx, @RequestParam( name = "upload_rate" , defaultValue = "0") Integer upload_rate,
                              @RequestParam( name = "upload_rate" , defaultValue = "0") Integer live_mode, @RequestParam( name = "enable_audio" , defaultValue = "0")Integer enable_audio,
                              @RequestParam( name = "expire_time" , defaultValue = "24") Integer expire_time){
-        Result result = new Result();
-        LiveModel liveModel = liveService.getLiveUrl(liveurl,device_id,0);
-        liveModel.setExpires_in(expire_time);
-        result.setData(liveModel);
-        result.setResultCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
-        return result;
+       return liveService.getLiveUrl(device_id, 0);
+
     }
+
+    @GetMapping("/playback-address")
+    public Result getLiveBackURL(String shop_id, String device_id, String channel_idx, @RequestParam( name = "upload_rate" , defaultValue = "0") Integer upload_rate,
+                                 @RequestParam( name = "upload_rate" , defaultValue = "0") Integer live_mode,@RequestParam( name = "play_type" , defaultValue = "0")Integer play_type,
+                                 @RequestParam( name = "enable_audio" , defaultValue = "0")Integer enable_audio,Date start_time, Date stop_time,
+                                 @RequestParam( name = "expire_time" , defaultValue = "24") Integer expire_time) {
+        return liveService.getLiveBackUrl(device_id, start_time, stop_time);
+    }
+
 }

@@ -53,8 +53,8 @@ public class DeviceService {
 	public Result getDeviceStatus(Result result, String deviceId) {
 
 		if (StringUtils.isBlank(deviceId)) {
-			result.setCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-			result.setMsg("缺失参数：device_id");
+			result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			result.setResultMsg("缺失参数：device_id");
 			return result;
 		}
 		// 封装请求参数
@@ -69,13 +69,13 @@ public class DeviceService {
 		// 处理请求结果
 		JSONObject resultJson = JSON.parseObject(rsp);
 		if (resultJson == null) {
-			result.setCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-			result.setMsg("远程请求异常！");
+			result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			result.setResultMsg("远程请求异常！");
 		} else {
 			String resultCode = resultJson.getString("resultCode");
 			if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
-				result.setCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
-				result.setMsg(CodeEnum.RESULT_CODE_SUCCESS.getMsg());
+				result.setResultCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
+				result.setResultMsg(CodeEnum.RESULT_CODE_SUCCESS.getMsg());
 
 				JSONArray data = resultJson.getJSONArray("data");
 				HashMap<String, Integer> map = new HashMap<>();
@@ -83,8 +83,8 @@ public class DeviceService {
 
 				result.setData(map);
 			} else {
-				result.setCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-				result.setMsg(resultJson.getString("resultMsg"));
+				result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+				result.setResultMsg(resultJson.getString("resultMsg"));
 			}
 		}
 		return result;
