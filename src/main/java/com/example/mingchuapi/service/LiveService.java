@@ -26,6 +26,9 @@ public class LiveService {
     @Value("${url.liveurl}")
     private String liveurl;
 
+    @Value("${url.livebackurl}")
+    private String  livebackurl;
+
     @Autowired
     private AndmuTokenService andmuTokenService;
 
@@ -84,7 +87,7 @@ public class LiveService {
         param.put("stop_time",stop_time);
         String paramStr = JSONObject.toJSONString(param);
 
-        String rsp = AndmuUtils.sendPost(liveurl, paramStr, andmuTokenService.getToken());
+        String rsp = AndmuUtils.sendPost( livebackurl, paramStr, andmuTokenService.getToken());
 
         // 处理请求结果
         JSONObject resultJson = JSON.parseObject(rsp);
