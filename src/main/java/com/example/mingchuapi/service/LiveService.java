@@ -59,10 +59,9 @@ public class LiveService {
                 result.setResultCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
                 result.setResultMsg(CodeEnum.RESULT_CODE_SUCCESS.getMsg());
 
-                LiveModel data = (LiveModel) resultJson.get("data");
                 HashMap<String, String> map = new HashMap<>();
-                map.put("url", data.getUrl());
-                map.put("expiresIn",data.getExpires_in().toString());
+                map.put("url", resultJson.getJSONObject("data").getString("url"));
+                map.put("expiresIn",resultJson.getJSONObject("data").getString("expiresln"));
 
                 result.setData(map);
             } else {
