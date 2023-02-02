@@ -28,5 +28,13 @@ url:
   realtimeThumbnailUrl: https://open.andmu.cn/v3/open/api/camera/thumbnail/realtime
 
 
-
-
+#日志记录设置
+logging:
+  pattern:
+    console: "%d - %msg%n"
+  level:
+    org.springframework.web: DEBUG
+    com.fileman: DEBUG
+    root: WARN
+  file:
+    path: @system.filePath@/log
