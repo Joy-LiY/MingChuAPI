@@ -126,8 +126,12 @@ public class DeviceService {
 			String resultCode = resultJson.getString("resultCode");
 			result.setResultCode(resultCode);
 			if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
+				result.setResultCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
+				result.setResultMsg(CodeEnum.RESULT_CODE_SUCCESS.getMsg());
+
 				HashMap<String, String> map = new HashMap<>();
 				map.put("url", resultJson.getJSONObject("data").getString("url"));
+
 				result.setData(map);
 			} else {
 				result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
