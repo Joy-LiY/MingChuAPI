@@ -2,6 +2,10 @@ package com.example.mingchuapi.controller;
 
 import com.example.mingchuapi.model.Result;
 import com.example.mingchuapi.service.DeviceService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +18,7 @@ import javax.annotation.Resource;
  * @Description: 设备信息相关接口
  * @Version: 1.0
  */
+@Api("手机归属地")
 @RestController
 public class DeviceController {
     @Resource
@@ -28,7 +33,11 @@ public class DeviceController {
      * 设备在线状态
      * 1：在线；2：离线
      */
+    @ApiOperation(value = "平台监测设备健康状态（1：在线；2：离线）", notes = "平台监测设备健康状态（1：在线；2：离线）")
     @GetMapping(value = "/device-status")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "shop_id", value = "店铺唯一 ID", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "device_id", value = "设备 ID", required = true, paramType = "query", dataType = "String")})
     public Result getDeviceStatus(@RequestParam(name = "shop_id", required = false) String shopId,
                                   @RequestParam(name = "device_id") String deviceId) {
         return deviceService.getDeviceStatus(shopId, deviceId);
@@ -45,7 +54,12 @@ public class DeviceController {
      * @param: [shopId, deviceId, channelIdx]
      * @return: com.example.mingchuapi.model.Result
      **/
+    @ApiOperation(value = "截取指定设备图片", notes = "截取指定设备图片")
     @GetMapping(value = "/device-screenshot")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "shop_id", value = "店铺唯一 ID", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "device_id", value = "设备 ID", required = true, paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "channel_idx", value = "通道号", paramType = "query", dataType = "String")})
     public Result getScreenshot(@RequestParam(name = "shop_id", required = false) String shopId,
                                 @RequestParam(name = "device_id") String deviceId,
                                 @RequestParam(name = "channel_idx", required = false) String channelIdx) {
