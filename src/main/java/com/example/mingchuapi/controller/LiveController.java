@@ -50,7 +50,7 @@ public class LiveController {
     @GetMapping("/playback-address")
     public Result getLiveBackURL(String shop_id, String device_id, String channel_idx, @RequestParam( name = "upload_rate" , defaultValue = "0") Integer upload_rate,
                                  @RequestParam( name = "upload_rate" , defaultValue = "0") Integer live_mode,@RequestParam( name = "play_type" , defaultValue = "0")Integer play_type,
-                                 @RequestParam( name = "enable_audio" , defaultValue = "0")Integer enable_audio,Date start_time, Date stop_time,
+                                 @RequestParam( name = "enable_audio" , defaultValue = "0")Integer enable_audio,String start_time, String stop_time,
                                  @RequestParam( name = "expire_time" , defaultValue = "24") Integer expire_time) {
         return liveService.getLiveBackUrl(device_id, start_time, stop_time);
     }

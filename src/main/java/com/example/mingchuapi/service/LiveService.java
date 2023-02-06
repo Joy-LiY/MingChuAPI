@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.SortedMap;
@@ -72,18 +75,23 @@ public class LiveService {
         return result;
     }
 
-    public Result getLiveBackUrl(String deviceId, Date start_time, Date stop_time) {
+    public Result getLiveBackUrl(String deviceId, String start_time, String stop_time) {
         Result result = new Result();
         if (StringUtils.isBlank(deviceId)) {
             result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
             result.setResultMsg("缺失参数：device_id");
             return result;
         }
-        // 封装请求参数
-        SortedMap<String, Object> param = new TreeMap<>();
-        param.put("deviceId", deviceId);
-        param.put("start_time",start_time);
-        param.put("stop_time",stop_time);
+
+        try {
+            SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            // 封装请求参数
+            SortedMap<String, Object> param = new TreeMap<>();
+            param.put("deviceId", deviceId);
+            param.put("startTime",format.parse(start_time).getTime());
+            param.put("endTime",format.parse(stop_time).getTime());
+
+
         String paramStr = JSONObject.toJSONString(param);
 
         String rsp = AndmuUtils.sendPost( livebackurl, paramStr, andmuTokenService.getToken());
@@ -108,6 +116,9 @@ public class LiveService {
                 result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
                 result.setResultMsg(resultJson.getString("resultMsg"));
             }
+        }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
         return result;
     }
