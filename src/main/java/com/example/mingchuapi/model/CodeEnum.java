@@ -8,7 +8,7 @@ public enum CodeEnum {
 
     RESULT_CODE_SUCCESS("200", "SUCCESS"),
     RESULT_CODE_FAIL("401", "TOKEN校验失败"),
-    RESULT_CODE_FAIL_OTHER("407","其他情况"),
+    RESULT_CODE_FAIL_OTHER("477","其他情况"),
     ;
 
     private String code;

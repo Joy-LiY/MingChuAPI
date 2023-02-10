@@ -64,7 +64,7 @@ public class LiveService {
 
                 HashMap<String, String> map = new HashMap<>();
                 map.put("url", resultJson.getJSONObject("data").getString("url"));
-                map.put("expiresIn",resultJson.getJSONObject("data").getString("expiresln"));
+                map.put("expires_in",resultJson.getJSONObject("data").getString("expiresln"));
 
                 result.setData(map);
             } else {
