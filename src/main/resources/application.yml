@@ -12,6 +12,10 @@ spring:
     mode: HTML5 # 要运⽤于模板之上的模板模式。另⻅ StandardTemplate-ModeHandlers( 默认值： HTML5)
     prefix: classpath:/templates/ # 在构建 URL 时添加到视图名称前的前缀（默认值： classpath:/templates/ ）
     suffix: .html
+  mvc:
+    # springboot2.6.6中将SpringMVC 默认路径匹配策略从AntPathMatcher 更改为PathPatternParser，导致出错，解决办法是切换回原先的AntPathMatcher
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 server:
   servlet:
@@ -34,8 +38,8 @@ logging:
   pattern:
     console: "%d - %msg%n"
   level:
-    org.springframework.web: DEBUG
+    org.springframework.web: INFO
     com.fileman: DEBUG
-    root: WARN
+    root: INFO
   file:
     path: @system.filePath@/log

@@ -20,7 +20,7 @@ public class TokenCacheTask {
     @Resource
     private AndmuTokenService andmuTokenService;
 
-    private static final long RATE = 7 * 24 * 60 * 1000L;
+    private static final long RATE = 7 * 23 * 60 * 60 * 1000L;
 
     @PreDestroy
     public void destroy() {
@@ -29,7 +29,7 @@ public class TokenCacheTask {
     }
 
     /**
-     * @description: token的有效期限为7天，这里设置每6天取一次
+     * @description: token的有效期限为7天，这里设置为失效前1个小时重新获取
      * @author: zhangwentao
      * @date: 2023/1/31 下午3:07
      * @param: []
