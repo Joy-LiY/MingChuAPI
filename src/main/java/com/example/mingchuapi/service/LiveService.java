@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -31,11 +32,11 @@ public class LiveService {
     private AndmuTokenService andmuTokenService;
 
 
-    public Map<String,String> getLiveUrl(String deviceId,long timestamp) {
-        Map<String,String> mapResult = new HashMap<>();
+    public Map<String, String> getLiveUrl(String deviceId, long timestamp, HttpServletResponse response) {
+        Map<String, String> mapResult = new HashMap<>();
         if (StringUtils.isBlank(deviceId)) {
-            mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            mapResult.put(Constants.DETAIL_KEY,"缺失参数：device_id");
+            response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
+            mapResult.put(Constants.DETAIL_KEY, "缺失参数：device_id");
             return mapResult;
         }
         // 封装请求参数
@@ -49,31 +50,37 @@ public class LiveService {
         JSONObject resultJson = JSON.parseObject(rsp);
 
         if (resultJson == null) {
-            mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            mapResult.put(Constants.DETAIL_KEY,"远程请求异常！");
+            response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
+            mapResult.put(Constants.DETAIL_KEY, "远程请求异常！");
         } else {
             String resultCode = resultJson.getString("resultCode");
+            mapResult.put(Constants.DETAIL_KEY, resultJson.getString("resultMsg"));
+
             if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
+                mapResult.clear();
                 mapResult.put("url", resultJson.getJSONObject("data").getString("url"));
                 mapResult.put("expires_in", resultJson.getJSONObject("data").getString("expiresIn"));
+            } else if (StringUtils.equalsAny(resultCode, AndmuCode.TOKEN_EXPIRATION_ERROR.getEcode(), AndmuCode.TOKEN_INVALID_ERROR.getEcode())) {
+                // token 异常
+                response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL.getCode()));
             } else {
-                mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-                mapResult.put(Constants.DETAIL_KEY,resultJson.getString("resultMsg"));
+                // 其他
+                response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
             }
         }
         return mapResult;
     }
 
-    public Map<String,String> getLiveBackUrl(String deviceId, String start_time, String stop_time) {
-        Map<String,String> mapResult = new HashMap<>();
+    public Map<String, String> getLiveBackUrl(String deviceId, String start_time, String stop_time, HttpServletResponse response) {
+        Map<String, String> mapResult = new HashMap<>();
         if (StringUtils.isBlank(deviceId)) {
-            mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            mapResult.put(Constants.DETAIL_KEY,"缺失参数：device_id");
+            response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
+            mapResult.put(Constants.DETAIL_KEY, "缺失参数：device_id");
             return mapResult;
         }
 
         try {
-            SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             // 封装请求参数
             SortedMap<String, Object> param = new TreeMap<>();
             param.put("deviceId", deviceId);
@@ -89,16 +96,22 @@ public class LiveService {
         JSONObject resultJson = JSON.parseObject(rsp);
 
         if (resultJson == null) {
-            mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            mapResult.put(Constants.DETAIL_KEY,"远程请求异常！");
+            response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
+            mapResult.put(Constants.DETAIL_KEY, "远程请求异常！");
         } else {
             String resultCode = resultJson.getString("resultCode");
+            mapResult.put(Constants.DETAIL_KEY, resultJson.getString("resultMsg"));
+
             if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
+                mapResult.clear();
                 mapResult.put("url", resultJson.getJSONObject("data").getString("hlsUrl"));
 
+            } else if (StringUtils.equalsAny(resultCode, AndmuCode.TOKEN_EXPIRATION_ERROR.getEcode(), AndmuCode.TOKEN_INVALID_ERROR.getEcode())) {
+                // token 异常
+                response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL.getCode()));
             } else {
-                mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-                mapResult.put(Constants.DETAIL_KEY,resultJson.getString("resultMsg"));
+                // 其他
+                response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
             }
         }
         } catch (ParseException e) {
