@@ -31,6 +31,8 @@ public class LiveService {
     @Autowired
     private AndmuTokenService andmuTokenService;
 
+    private final long URL_END_TIME = 100l;
+
 
     public Map<String,String> getLiveUrl(String deviceId,long timestamp) {
         Map<String,String> mapResult = new HashMap<>();
@@ -42,6 +44,7 @@ public class LiveService {
         // 封装请求参数
         SortedMap<String, Object> param = new TreeMap<>();
         param.put("deviceId", deviceId);
+        param.put("endTime",URL_END_TIME);
         String paramStr = JSONObject.toJSONString(param);
 
         String rsp = AndmuUtils.sendPost(liveurl, paramStr, andmuTokenService.getToken());
@@ -56,7 +59,7 @@ public class LiveService {
             String resultCode = resultJson.getString("resultCode");
             if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
                 mapResult.put("url", resultJson.getJSONObject("data").getString("url"));
-                mapResult.put("expires_in",resultJson.getJSONObject("data").getString("expiresln"));
+                mapResult.put("expires_in",resultJson.getJSONObject("data").getString("expiresIn"));
             } else {
                 mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
                 mapResult.put(Constants.DETAIL_KEY,resultJson.getString("resultMsg"));
