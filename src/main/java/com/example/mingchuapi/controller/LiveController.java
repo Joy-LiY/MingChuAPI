@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 
 /**
  * 直播相关接口
@@ -51,9 +53,9 @@ public class LiveController {
     })
     @ApiOperation(value = "直播地址获取接口")
     @GetMapping("/live-address")
-    public Result getLiveURL(String shop_id, String device_id, String channel_idx, @RequestParam(name = "upload_rate", defaultValue = "0") Integer upload_rate,
-                             @RequestParam(name = "upload_rate", defaultValue = "0") Integer live_mode, @RequestParam(name = "enable_audio", defaultValue = "0") Integer enable_audio,
-                             @RequestParam(name = "expire_time", defaultValue = "24") Integer expire_time) {
+    public Map<String,String> getLiveURL(String shop_id, String device_id, String channel_idx, @RequestParam(name = "upload_rate", defaultValue = "0") Integer upload_rate,
+                                         @RequestParam(name = "upload_rate", defaultValue = "0") Integer live_mode, @RequestParam(name = "enable_audio", defaultValue = "0") Integer enable_audio,
+                                         @RequestParam(name = "expire_time", defaultValue = "24") Integer expire_time) {
         return liveService.getLiveUrl(device_id, 0);
 
     }
@@ -71,7 +73,7 @@ public class LiveController {
             @ApiImplicitParam(name = "enable_audio", value = "启用音频（0：否；1：是；默认：0）", paramType = "query", dataType = "Integer"),
             @ApiImplicitParam(name = "expire_time", value = "过期时长（单位：秒；默认为 24 * 60 * 60 秒）", paramType = "query", dataType = "Integer")
     })
-    public Result getLiveBackURL(String shop_id, String device_id, String channel_idx, @RequestParam(name = "upload_rate", defaultValue = "0") Integer upload_rate,
+    public Map<String,String> getLiveBackURL(String shop_id, String device_id, String channel_idx, @RequestParam(name = "upload_rate", defaultValue = "0") Integer upload_rate,
                                  @RequestParam(name = "upload_rate", defaultValue = "0") Integer live_mode, @RequestParam(name = "play_type", defaultValue = "0") Integer play_type,
                                  @RequestParam(name = "enable_audio", defaultValue = "0") Integer enable_audio, String start_time, String stop_time,
                                  @RequestParam(name = "expire_time", defaultValue = "24") Integer expire_time) {

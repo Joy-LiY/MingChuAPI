@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -30,12 +31,12 @@ public class LiveService {
     private AndmuTokenService andmuTokenService;
 
 
-    public Result getLiveUrl(String deviceId,long timestamp) {
-        Result result = new Result();
+    public Map<String,String> getLiveUrl(String deviceId,long timestamp) {
+        Map<String,String> mapResult = new HashMap<>();
         if (StringUtils.isBlank(deviceId)) {
-            result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            result.setResultMsg("缺失参数：device_id");
-            return result;
+            mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+            mapResult.put("detail","缺失参数：device_id");
+            return mapResult;
         }
         // 封装请求参数
         SortedMap<String, Object> param = new TreeMap<>();
@@ -48,33 +49,27 @@ public class LiveService {
         JSONObject resultJson = JSON.parseObject(rsp);
 
         if (resultJson == null) {
-            result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            result.setResultMsg("远程请求异常！");
+            mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+            mapResult.put("detail","远程请求异常！");
         } else {
             String resultCode = resultJson.getString("resultCode");
             if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
-                result.setResultCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
-                result.setResultMsg(CodeEnum.RESULT_CODE_SUCCESS.getMsg());
-
-                HashMap<String, String> map = new HashMap<>();
-                map.put("url", resultJson.getJSONObject("data").getString("url"));
-                map.put("expires_in",resultJson.getJSONObject("data").getString("expiresln"));
-
-                result.setData(map);
+                mapResult.put("url", resultJson.getJSONObject("data").getString("url"));
+                mapResult.put("expires_in",resultJson.getJSONObject("data").getString("expiresln"));
             } else {
-                result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-                result.setResultMsg(resultJson.getString("resultMsg"));
+                mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+                mapResult.put("detail",resultJson.getString("resultMsg"));
             }
         }
-        return result;
+        return mapResult;
     }
 
-    public Result getLiveBackUrl(String deviceId, String start_time, String stop_time) {
-        Result result = new Result();
+    public Map<String,String> getLiveBackUrl(String deviceId, String start_time, String stop_time) {
+        Map<String,String> mapResult = new HashMap<>();
         if (StringUtils.isBlank(deviceId)) {
-            result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            result.setResultMsg("缺失参数：device_id");
-            return result;
+            mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+            mapResult.put("detail","缺失参数：device_id");
+            return mapResult;
         }
 
         try {
@@ -94,27 +89,22 @@ public class LiveService {
         JSONObject resultJson = JSON.parseObject(rsp);
 
         if (resultJson == null) {
-            result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            result.setResultMsg("远程请求异常！");
+            mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+            mapResult.put("detail","远程请求异常！");
         } else {
             String resultCode = resultJson.getString("resultCode");
             if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
-                result.setResultCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
-                result.setResultMsg(CodeEnum.RESULT_CODE_SUCCESS.getMsg());
+                mapResult.put("url", resultJson.getJSONObject("data").getString("hlsUrl"));
 
-                HashMap<String, String> map = new HashMap<>();
-                map.put("url", resultJson.getJSONObject("data").getString("hlsUrl"));
-
-                result.setData(map);
             } else {
-                result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-                result.setResultMsg(resultJson.getString("resultMsg"));
+                mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+                mapResult.put("detail",resultJson.getString("resultMsg"));
             }
         }
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        return result;
+        return mapResult;
     }
 
 
