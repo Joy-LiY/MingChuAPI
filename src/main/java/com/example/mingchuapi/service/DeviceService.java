@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -41,18 +42,19 @@ public class DeviceService {
 	 *
 	 * @param shopId   店铺唯一 ID
 	 * @param deviceId 设备 ID 必填
+	 * @param response
 	 * @return Result
 	 * 设备在线状态
 	 * 1：在线；2：离线
 	 */
-	public Map getDeviceStatus(String shopId, String deviceId) {
-		return this.getDeviceStatus(new HashMap<>(), deviceId);
+	public Map getDeviceStatus(String shopId, String deviceId, HttpServletResponse response) {
+		return this.getDeviceStatus(new HashMap<>(), deviceId, response);
 	}
 
-	private Map getDeviceStatus(HashMap<String, Object> resultMap, String deviceId) {
+	private Map getDeviceStatus(HashMap<String, Object> resultMap, String deviceId, HttpServletResponse response) {
 
 		if (StringUtils.isBlank(deviceId)) {
-			resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
 			resultMap.put(Constants.DETAIL_KEY, "缺失参数：device_id");
 			return resultMap;
 		}
@@ -68,8 +70,8 @@ public class DeviceService {
 		// 处理请求结果
 		JSONObject resultJson = JSON.parseObject(rsp);
 		if (resultJson == null) {
-			resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
 			resultMap.put(Constants.DETAIL_KEY, "远程请求异常！");
+			response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
 		} else {
 			String resultCode = resultJson.getString("resultCode");
 			resultMap.put(Constants.DETAIL_KEY, resultJson.getString("resultMsg"));
@@ -88,32 +90,34 @@ public class DeviceService {
 				return resultMap;
 			} else if (StringUtils.equalsAny(resultCode, AndmuCode.TOKEN_EXPIRATION_ERROR.getEcode(), AndmuCode.TOKEN_INVALID_ERROR.getEcode())) {
 				// token异常
-				resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL.getCode());
+				response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL.getCode()));
 			} else {
 				// 其他
-				resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+				response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
 			}
 		}
 		return resultMap;
 	}
 
 	/**
-	 * @param channelIdx 通道号
-	 * @param deviceId   设备 ID
 	 * @param shopId     店铺唯一 ID
+	 * @param deviceId   设备 ID
+	 * @param channelIdx 通道号
+	 * @param response
 	 * @description: 截取指定设备图片
 	 * @author: zhangwentao
 	 * @date: 2023/1/31 下午1:48
 	 * @param: [shopId, deviceId, channelIdx]
 	 * @return: com.example.mingchuapi.model.Result
 	 **/
-	public Map getScreenshot(String shopId, String deviceId, String channelIdx) {
-		return this.getRealtimeThumbnail(new HashMap<>(), deviceId);
+	public Map getScreenshot(String shopId, String deviceId, String channelIdx, HttpServletResponse response) {
+		return this.getRealtimeThumbnail(new HashMap<>(), deviceId, response);
 	}
 
-	private Map getRealtimeThumbnail(HashMap<String, Object> resultMap, String deviceId) {
+	private Map getRealtimeThumbnail(HashMap<String, Object> resultMap, String deviceId, HttpServletResponse response) {
 		if (StringUtils.isBlank(deviceId)) {
-			resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
+
 			resultMap.put(Constants.DETAIL_KEY, "缺失参数：device_id");
 			return resultMap;
 		}
@@ -130,7 +134,7 @@ public class DeviceService {
 		// 处理请求结果
 		JSONObject resultJson = JSONObject.parseObject(rsp);
 		if (resultJson == null) {
-			resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
 			resultMap.put(Constants.DETAIL_KEY, "远程请求异常！");
 		} else {
 			String resultCode = resultJson.getString("resultCode");
@@ -143,10 +147,10 @@ public class DeviceService {
 				return resultMap;
 			} else if (StringUtils.equalsAny(resultCode, AndmuCode.TOKEN_EXPIRATION_ERROR.getEcode(), AndmuCode.TOKEN_INVALID_ERROR.getEcode())) {
 				// token 异常
-				resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL.getCode());
+				response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL.getCode()));
 			} else {
 				// 其他
-				resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+				response.setStatus(Integer.parseInt(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode()));
 			}
 		}
 		return resultMap;

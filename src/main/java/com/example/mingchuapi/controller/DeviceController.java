@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @Author: zhangwentao
@@ -38,8 +39,9 @@ public class DeviceController {
             @ApiImplicitParam(name = "shop_id", value = "店铺唯一 ID", paramType = "query", dataType = "String"),
             @ApiImplicitParam(name = "device_id", value = "设备 ID", required = true, paramType = "query", dataType = "String")})
     public Object getDeviceStatus(@RequestParam(name = "shop_id", required = false) String shopId,
-                                  @RequestParam(name = "device_id") String deviceId) {
-        return deviceService.getDeviceStatus(shopId, deviceId);
+                                  @RequestParam(name = "device_id") String deviceId,
+                                  HttpServletResponse response) {
+        return deviceService.getDeviceStatus(shopId, deviceId, response);
     }
 
 
@@ -61,7 +63,8 @@ public class DeviceController {
             @ApiImplicitParam(name = "channel_idx", value = "通道号", paramType = "query", dataType = "String")})
     public Object getScreenshot(@RequestParam(name = "shop_id", required = false) String shopId,
                                 @RequestParam(name = "device_id") String deviceId,
-                                @RequestParam(name = "channel_idx", required = false) String channelIdx) {
-        return deviceService.getScreenshot(shopId, deviceId, channelIdx);
+                                @RequestParam(name = "channel_idx", required = false) String channelIdx,
+                                HttpServletResponse response) {
+        return deviceService.getScreenshot(shopId, deviceId, channelIdx, response);
     }
 }
