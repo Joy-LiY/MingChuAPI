@@ -3,9 +3,9 @@ package com.example.mingchuapi.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mingchuapi.config.Constants;
 import com.example.mingchuapi.enums.AndmuCode;
 import com.example.mingchuapi.model.CodeEnum;
-import com.example.mingchuapi.model.Result;
 import com.example.mingchuapi.util.AndmuUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -34,6 +35,7 @@ public class DeviceService {
 	@Value("${url.deviceInfoUrl}")
 	private String deviceInfoUrl;
 
+
 	/**
 	 * 平台监测设备健康状态。
 	 *
@@ -43,16 +45,16 @@ public class DeviceService {
 	 * 设备在线状态
 	 * 1：在线；2：离线
 	 */
-	public Result getDeviceStatus(String shopId, String deviceId) {
-		return this.getDeviceStatus(new Result(), deviceId);
+	public Map getDeviceStatus(String shopId, String deviceId) {
+		return this.getDeviceStatus(new HashMap<>(), deviceId);
 	}
 
-	private Result getDeviceStatus(Result result, String deviceId) {
+	private Map getDeviceStatus(HashMap<String, Object> resultMap, String deviceId) {
 
 		if (StringUtils.isBlank(deviceId)) {
-			result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-			result.setResultMsg("缺失参数：device_id");
-			return result;
+			resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			resultMap.put(Constants.DETAIL_KEY, "缺失参数：device_id");
+			return resultMap;
 		}
 		// 封装请求参数
 		SortedMap<String, Object> param = new TreeMap<>();
@@ -66,25 +68,33 @@ public class DeviceService {
 		// 处理请求结果
 		JSONObject resultJson = JSON.parseObject(rsp);
 		if (resultJson == null) {
-			result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-			result.setResultMsg("远程请求异常！");
+			resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			resultMap.put(Constants.DETAIL_KEY, "远程请求异常！");
 		} else {
 			String resultCode = resultJson.getString("resultCode");
+			resultMap.put(Constants.DETAIL_KEY, resultJson.getString("resultMsg"));
+
 			if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
-				result.setResultCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
-				result.setResultMsg(CodeEnum.RESULT_CODE_SUCCESS.getMsg());
-
+				// 请求成功
 				JSONArray data = resultJson.getJSONArray("data");
-				HashMap<String, Integer> map = new HashMap<>();
-				map.put("device_status", data.getJSONObject(0).getIntValue("deviceStatus"));
 
-				result.setData(map);
+				resultMap.clear();
+				int resStatus = data.getJSONObject(0).getIntValue("deviceStatus");
+				// 接口返回值转换（云眼离线状态为0，名厨离线状态为2）
+				if (0 == resStatus) {
+					resStatus = 2;
+				}
+				resultMap.put("device_status", resStatus);
+				return resultMap;
+			} else if (StringUtils.equalsAny(resultCode, AndmuCode.TOKEN_EXPIRATION_ERROR.getEcode(), AndmuCode.TOKEN_INVALID_ERROR.getEcode())) {
+				// token异常
+				resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL.getCode());
 			} else {
-				result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-				result.setResultMsg(resultJson.getString("resultMsg"));
+				// 其他
+				resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
 			}
 		}
-		return result;
+		return resultMap;
 	}
 
 	/**
@@ -97,15 +107,15 @@ public class DeviceService {
 	 * @param: [shopId, deviceId, channelIdx]
 	 * @return: com.example.mingchuapi.model.Result
 	 **/
-	public Result getScreenshot(String shopId, String deviceId, String channelIdx) {
-		return this.getRealtimeThumbnail(new Result(), deviceId);
+	public Map getScreenshot(String shopId, String deviceId, String channelIdx) {
+		return this.getRealtimeThumbnail(new HashMap<>(), deviceId);
 	}
 
-	private Result getRealtimeThumbnail(Result result, String deviceId) {
+	private Map getRealtimeThumbnail(HashMap<String, Object> resultMap, String deviceId) {
 		if (StringUtils.isBlank(deviceId)) {
-			result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-			result.setResultMsg("缺失参数：device_id");
-			return result;
+			resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			resultMap.put(Constants.DETAIL_KEY, "缺失参数：device_id");
+			return resultMap;
 		}
 
 		// 封装参数
@@ -120,27 +130,26 @@ public class DeviceService {
 		// 处理请求结果
 		JSONObject resultJson = JSONObject.parseObject(rsp);
 		if (resultJson == null) {
-			result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-			result.setResultMsg("远程请求异常！");
+			resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+			resultMap.put(Constants.DETAIL_KEY, "远程请求异常！");
 		} else {
 			String resultCode = resultJson.getString("resultCode");
-			result.setResultCode(resultCode);
+			resultMap.put(Constants.DETAIL_KEY, resultJson.getString("resultMsg"));
+
 			if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
-				result.setResultCode(CodeEnum.RESULT_CODE_SUCCESS.getCode());
-				result.setResultMsg(CodeEnum.RESULT_CODE_SUCCESS.getMsg());
-
-				HashMap<String, String> map = new HashMap<>();
-				map.put("url", resultJson.getJSONObject("data").getString("url"));
-
-				result.setData(map);
+				// 请求成功
+				resultMap.clear();
+				resultMap.put("url", resultJson.getJSONObject("data").getString("url"));
+				return resultMap;
+			} else if (StringUtils.equalsAny(resultCode, AndmuCode.TOKEN_EXPIRATION_ERROR.getEcode(), AndmuCode.TOKEN_INVALID_ERROR.getEcode())) {
+				// token 异常
+				resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL.getCode());
 			} else {
-				result.setResultCode(CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-				result.setResultMsg(resultJson.getString("resultMsg"));
+				// 其他
+				resultMap.put(Constants.CODE_KEY, CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
 			}
 		}
-		return result;
+		return resultMap;
 	}
-
-
 
 }
