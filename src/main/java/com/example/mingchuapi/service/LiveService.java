@@ -2,6 +2,7 @@ package com.example.mingchuapi.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mingchuapi.config.Constants;
 import com.example.mingchuapi.enums.AndmuCode;
 import com.example.mingchuapi.model.CodeEnum;
 import com.example.mingchuapi.model.Result;
@@ -34,8 +35,8 @@ public class LiveService {
     public Map<String,String> getLiveUrl(String deviceId,long timestamp) {
         Map<String,String> mapResult = new HashMap<>();
         if (StringUtils.isBlank(deviceId)) {
-            mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            mapResult.put("detail","缺失参数：device_id");
+            mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+            mapResult.put(Constants.DETAIL_KEY,"缺失参数：device_id");
             return mapResult;
         }
         // 封装请求参数
@@ -49,16 +50,16 @@ public class LiveService {
         JSONObject resultJson = JSON.parseObject(rsp);
 
         if (resultJson == null) {
-            mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            mapResult.put("detail","远程请求异常！");
+            mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+            mapResult.put(Constants.DETAIL_KEY,"远程请求异常！");
         } else {
             String resultCode = resultJson.getString("resultCode");
             if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
                 mapResult.put("url", resultJson.getJSONObject("data").getString("url"));
                 mapResult.put("expires_in",resultJson.getJSONObject("data").getString("expiresln"));
             } else {
-                mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-                mapResult.put("detail",resultJson.getString("resultMsg"));
+                mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+                mapResult.put(Constants.DETAIL_KEY,resultJson.getString("resultMsg"));
             }
         }
         return mapResult;
@@ -67,8 +68,8 @@ public class LiveService {
     public Map<String,String> getLiveBackUrl(String deviceId, String start_time, String stop_time) {
         Map<String,String> mapResult = new HashMap<>();
         if (StringUtils.isBlank(deviceId)) {
-            mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            mapResult.put("detail","缺失参数：device_id");
+            mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+            mapResult.put(Constants.DETAIL_KEY,"缺失参数：device_id");
             return mapResult;
         }
 
@@ -89,16 +90,16 @@ public class LiveService {
         JSONObject resultJson = JSON.parseObject(rsp);
 
         if (resultJson == null) {
-            mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-            mapResult.put("detail","远程请求异常！");
+            mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+            mapResult.put(Constants.DETAIL_KEY,"远程请求异常！");
         } else {
             String resultCode = resultJson.getString("resultCode");
             if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
                 mapResult.put("url", resultJson.getJSONObject("data").getString("hlsUrl"));
 
             } else {
-                mapResult.put("resultCode",CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
-                mapResult.put("detail",resultJson.getString("resultMsg"));
+                mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
+                mapResult.put(Constants.DETAIL_KEY,resultJson.getString("resultMsg"));
             }
         }
         } catch (ParseException e) {
