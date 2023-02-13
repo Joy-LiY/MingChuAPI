@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.mingchuapi.config.Constants;
 import com.example.mingchuapi.enums.AndmuCode;
 import com.example.mingchuapi.model.CodeEnum;
-import com.example.mingchuapi.model.Result;
 import com.example.mingchuapi.util.AndmuUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,7 @@ public class LiveService {
             String resultCode = resultJson.getString("resultCode");
             if (AndmuCode.SUCCESS.getEcode().equals(resultCode)) {
                 mapResult.put("url", resultJson.getJSONObject("data").getString("url"));
-                mapResult.put("expires_in",resultJson.getJSONObject("data").getString("expiresln"));
+                mapResult.put("expires_in", resultJson.getJSONObject("data").getString("expiresIn"));
             } else {
                 mapResult.put(Constants.CODE_KEY,CodeEnum.RESULT_CODE_FAIL_OTHER.getCode());
                 mapResult.put(Constants.DETAIL_KEY,resultJson.getString("resultMsg"));
